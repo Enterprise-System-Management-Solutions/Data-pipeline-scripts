@@ -1,0 +1,93 @@
+PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+export PATH
+
+export TMP=/tmp
+export TMPDIR=$TMP
+
+export ORACLE_HOSTNAME=dwhnode01
+export ORACLE_UNQNAME=dwhdb01
+export ORACLE_BASE=/data01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/19.0.0/dbhome_1
+export ORA_INVENTORY=/data01/app/oraInventory
+export ORACLE_SID=dwhdb01
+export DATA_DIR=/data01/oradata
+
+export PATH=/usr/sbin:/usr/local/bin:$PATH
+export PATH=$ORACLE_HOME/bin:$PATH
+
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib;
+
+
+
+TABLE_NAME="SDP_EXT"  export TABLE_NAME
+
+##echo "-------------------------------- $1 --------------------------------"
+echo "Create table started at `date \"+%D %T\"`"
+
+SYN_TYPE="SDP01" export SYN_TYPE
+echo $SYN_TYPE
+
+sqlplus -s <<EOF
+dwh_user/dwh_user_123
+set feedback off
+drop table $TABLE_NAME
+/
+create table $TABLE_NAME
+(
+  SDP01_TIMESTAMP            VARCHAR2(255 BYTE),
+  SDP02_CLIENTTRANSACTIONID  VARCHAR2(255 BYTE),
+  SDP03_APARTY               VARCHAR2(255 BYTE),
+  SDP04_INTERNALCAUSE        VARCHAR2(255 BYTE),
+  SDP05_BASICCAUSE           VARCHAR2(255 BYTE),
+  SDP06_TRANSACTIONID        VARCHAR2(255 BYTE),
+  SDP07_PRICEPLAN            VARCHAR2(255 BYTE),
+  SDP08_OFFERCODE            VARCHAR2(255 BYTE),
+  SDP09_ORIGCOUNTRYCODE      VARCHAR2(255 BYTE),
+  SDP10_DIAMTRANSTYPE        VARCHAR2(255 BYTE),
+  SDP11_ACCESSFLAG           VARCHAR2(255 BYTE),
+  SDP12_CONTENTPROVIDERID    VARCHAR2(255 BYTE),
+  SDP13_DATA                 VARCHAR2(255 BYTE),
+  SDP14_SUBSCRIPTIONDATE     VARCHAR2(255 BYTE),
+  SDP15_SUBSCRIPTIONFLAG     VARCHAR2(255 BYTE),
+  SDP16_CHARGINGTYPE         VARCHAR2(255 BYTE),
+  SDP17_CALLCHARGE           VARCHAR2(255 BYTE),
+  SDP18_CHANNEL              VARCHAR2(255 BYTE),
+  SDP19_CP_NAME              VARCHAR2(255 BYTE),
+  SDP20_BILLINGTYPE          VARCHAR2(255 BYTE),
+  SDP21_DEFAULTCALLCHARGE    VARCHAR2(255 BYTE),
+  SDP22_REASONCODE           VARCHAR2(255 BYTE),
+  SDP23_BILLINGTIME          VARCHAR2(255 BYTE),
+  SDP24_TASKID               VARCHAR2(255 BYTE),
+  SDP25_PRODUCTID            VARCHAR2(255 BYTE),
+  SDP26_TAXABLEAMOUNT        VARCHAR2(255 BYTE),
+  SDP27_CREATE_TIME          VARCHAR2(255 BYTE)
+)
+ORGANIZATION EXTERNAL
+  (  TYPE ORACLE_LOADER
+     DEFAULT DIRECTORY SDP_DIR
+        ACCESS PARAMETERS
+       ( RECORDS DELIMITED by NEWLINE
+        BADFILE     '$1.bad'
+        DISCARDFILE '$1.dis'
+        FIELDS TERMINATED BY X'9'
+        MISSING FIELD VALUES ARE NULL
+ )
+     LOCATION (SDP_DIR:'$1.txt')
+  )
+REJECT LIMIT UNLIMITED
+NOPARALLEL
+NOMONITORING
+/
+drop synonym  $SYN_TYPE
+/
+create synonym  $SYN_TYPE for $TABLE_NAME
+/
+exit
+EOF
+
+echo "External table created"
+
+

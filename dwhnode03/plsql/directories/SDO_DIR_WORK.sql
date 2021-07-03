@@ -1,0 +1,8 @@
+--
+-- SDO_DIR_WORK  (Directory) 
+--
+CREATE OR REPLACE DIRECTORY 
+SDO_DIR_WORK AS 
+'';
+
+

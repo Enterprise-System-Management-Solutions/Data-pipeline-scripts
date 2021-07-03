@@ -1,0 +1,9 @@
+#Move CDRs into its own directories
+#*/5 * * * * /data02/scripts/move_CDR.sh
+*/5 * * * * /data02/scripts/move_CDR_05.sh
+##======Changed Chown and Chmod=========##
+##*/5 * * * * /data02/scripts/process/bin/tareq/change_chown_chmod.sh
+
+##=====change ownership in main dir : /data02/cbs_cdrs/Source=========##
+*/5 * * * * /data02/scripts/process/bin/laila/change_ownership.sh
+

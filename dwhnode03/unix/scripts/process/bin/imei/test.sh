@@ -1,0 +1,90 @@
+#Author :       Tareq
+#Date   :       06-08-2020
+#!/bin/bash
+
+
+PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+export PATH
+
+export TMP=/tmp
+export TMPDIR=$TMP
+
+export ORACLE_HOSTNAME=dwhnode03
+export ORACLE_UNQNAME=dwhdb03
+export ORACLE_BASE=/data01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/19.0.0/dbhome_1
+export ORA_INVENTORY=/data01/app/oraInventory
+export ORACLE_SID=dwhdb03
+export DATA_DIR=/data01/oradata
+
+export PATH=/usr/sbin:/usr/local/bin:$PATH
+export PATH=$ORACLE_HOME/bin:$PATH
+
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+
+part=$1
+
+imei_fct()
+{
+sqlplus  -s <<EOF
+dwh_user03/dwh_user_123
+SET echo on
+SET head off
+SET feedback off
+DECLARE
+CURSOR C1 IS
+SELECT DATE_KEY, M04_MSISDNAPARTY, IMEI,M02_IMSI
+FROM
+(SELECT DATE_KEY,M04_MSISDNAPARTY,LEN,M02_IMSI,M03_IMEI,
+CASE
+WHEN LEN < 14
+THEN NULL
+WHEN LEN > 13
+THEN M03_IMEI
+
+END IMEI
+
+FROM
+( 
+SELECT /*+ palallel (A,16)*/ B.DATE_KEY,M04_MSISDNAPARTY,M02_IMSI,M03_IMEI,LENGTH(M03_IMEI) LEN
+FROM L1_MSC PARTITION($1) A, DATE_DIM B
+WHERE  REGEXP_LIKE(M03_IMEI, '^[[:digit:]]+$')
+AND TO_CHAR(B.DATE_VALUE,'RRRRMMDD')=SUBSTR((M07_ANSWERTIMESTAMP),1,8)
+)
+)
+GROUP BY DATE_KEY, M04_MSISDNAPARTY, IMEI,M02_IMSI;
+
+
+BEGIN
+
+   FOR REC IN C1
+   LOOP
+
+     SP_LUHN_ALG_TEST(REC.DATE_KEY,REC.M04_MSISDNAPARTY,REC.IMEI,REC.M02_IMSI);
+
+   END LOOP;
+   
+   BEGIN
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE TAREQ_IMEI_MSISDN_FCT_LD DROP STORAGE';
+    INSERT INTO TAREQ_IMEI_MSISDN_FCT(DATE_KEY, MSISDN, IMEI, IMSI)
+    SELECT DATE_KEY, MSISDN, IMEI, IMSI
+    FROM TAREQ_IMEI_MSISDN_FCT_LD
+    WHERE MSISDN||IMEI NOT IN (SELECT MSISDN||IMEI FROM TAREQ_IMEI_MSISDN_FCT);
+    COMMIT;
+   END;
+NULL;
+END;
+EXIT
+EOF
+}
+
+imei_fct $part
+
+#partition=`cat /data02/scripts/process/bin/imei/partition.txt | head -2| awk -F" " {'print $1'}`
+#for i in $partition
+#do
+#imei_fct "$i"
+#done
+

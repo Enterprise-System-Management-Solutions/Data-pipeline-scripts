@@ -1,0 +1,5 @@
+/data05/
+/data05/backup
+/data05/unit_offer_dump
+/data05/unit_offer_dump/dwh_dir
+/data05/cbs

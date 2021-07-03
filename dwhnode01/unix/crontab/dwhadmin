@@ -1,0 +1,110 @@
+### File Reg CDR_HEAD|| every hour to process_dir ######
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_adj.sh  >> /data02/scripts/process/registration_adj_procc.log
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_cm.sh   >> /data02/scripts/process/registration_cm_procc.log
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_com.sh  >> /data02/scripts/process/registration_com_procc.log
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_data.sh  >> /data02/scripts/process/registration_data_procc.log
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_mon.sh  >> /data02/scripts/process/registration_mon_procc.log
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_sms.sh  >> /data02/scripts/process/registration_sms_procc.log
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_transfer.sh  >> /data02/scripts/process/registration_transfer_procc.log
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_voice.sh  >> /data02/scripts/process/registration_voice_procc.log
+*/10 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/run_registration_vou.sh  >> /data02/scripts/process/registration_vou_procc.log
+
+## Backlog File Reg CDR_HEAD##
+*/5 * * * * /data02/scripts/process/bin/file_registration/reg_to_process/backlog/cron_backlog_procc.sh
+#* * * * * /data02/scripts/process/bin/file_registration/reg_to_process/backlog/run_registration_vou_manual.sh 20210204
+#* * * * * /data02/scripts/process/bin/file_registration/reg_to_process/backlog/run_registration_adj_manual.sh 20210421
+##CBS CDRs Merge##
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_voice.sh
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_data.sh
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_sms.sh
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_mon.sh
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_com.sh
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_cm.sh
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_adj.sh
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_transfer.sh
+#*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_vou.sh
+*/30 * * * * /data02/scripts/process/bin/file_merge/file_merge_vou_LessThenCurrentHour.sh
+*/50 * * * * /data02/scripts/process/bin/file_merge/cron_vou_backlog.sh
+#* * * * * /data02/scripts/process/bin/file_merge/cron_vou_backlog_manual.sh 20210504
+##File Reg CDR_HEAD_MERGE || From merge_dir to dump_dir #####
+*/20 * * * * /data02/scripts/process/bin/file_registration/run_registration_all.sh
+
+#### Delete merge dump || From dump_dir ###
+*/50 * * * * /data02/scripts/process/bin/tareq/cron_delete.sh
+
+#####File Load to L1 Temp Tables #####
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_adj.sh
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_cm.sh
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_com.sh
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_data.sh
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_mon.sh
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_sms.sh
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_transfer.sh
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_voice.sh
+*/10 * * * * /data02/scripts/process/bin/loading_l1/temp_etl/esms_cbs01_loader_vou.sh
+
+
+##========L1 Temp table Alter======##
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/adj_temp_alter.sh
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/com_temp_alter.sh
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/cm_temp_alter.sh
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/data_temp_alter.sh
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/mon_temp_alter.sh
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/sms_temp_alter.sh
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/transfer_temp_alter.sh
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/voice_temp_alter.sh
+0 3 * * * /data02/scripts/process/bin/l1_temp_alter/vou_temp_alter.sh
+
+##===============File Transfer L2 Table from l1 temp table=========##
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_adj.sh
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_cm.sh
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_com.sh
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_data.sh
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_mon.sh
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_sms.sh
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_transfer.sh
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_voice.sh
+20 3 * * * /data02/scripts/process/bin/loading_l2/temp_etl/run_l2_insert_vou.sh
+
+##==Transfer L1 temp to L1 main table ==##
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_adjustment_temp.sh
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_content_temp.sh
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_data_temp.sh
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_management_temp.sh
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_recharge_temp.sh
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_recurring_temp.sh
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_sms_temp.sh
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_transfer_temp.sh
+0 12 * * * /data02/scripts/process/bin/loading_l1_temp_l1/p_l1_from_l1_voice_temp.sh
+
+## ETSAF processed ##
+10 03 * * * /data02/scripts/process/bin/etsaf/l1_etsaf_load_from_view.sh
+05 04 * * * /data02/scripts/process/bin/erp/l1_erp_from_dblink.sh
+##SDP Dump Processed##
+05 04 * * * /data02/scripts/process/bin/loding_sdp/esms_sdp_file_reg.sh
+20 04 * * * /data02/scripts/process/bin/loding_sdp/esms_load_l1_sdp.sh
+
+##Unit offer dump load##
+20 08 * * * /data02/scripts/process/bin/unit_offer/cron_job_fud.sh
+
+####Corona IVR####
+0 6 * * * /data02/scripts/process/bin/tareq/l2_voice_insert_covid_19.sh
+
+## L2 export for hadoop##
+00 11 * * * /data02/scripts/process/bin/file_exp/cron_l2_export.sh
+
+##monitor l1_l2_count and directory count##
+0 8 * * * /data02/scripts/process/bin/monitor/run_monitor_script_count.sh
+05 */1 * * * /data02/scripts/process/bin/monitor/run_mount_point_checking.sh
+0 8 * * * /data02/scripts/process/bin/monitor/run_cbs_system_monitor.sh
+0 8 * * * /data02/scripts/process/bin/layer_count/layer1_count.sh
+0 8 * * * /data02/scripts/process/bin/layer_count/layer2_count.sh
+
+##SMS Alart Every 02 Hour##
+1 */1 * * * /data02/scripts/process/bin/sms_alert/cbs_sms_alert.sh
+0 */2 * * * /data02/scripts/process/bin/sms_alert/tablespace_sms_alert.sh
+*/30 * * * * /data02/scripts/process/bin/sms_alert/sms_alert_mount_storage.sh
+
+##Old Partition Drop##
+0 11 * * * /data02/scripts/process/bin/partition_drop/cron_old_partition_drop.sh
+

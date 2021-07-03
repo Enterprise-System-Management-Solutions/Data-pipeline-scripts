@@ -1,0 +1,99 @@
+PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+export PATH
+
+export TMP=/tmp
+export TMPDIR=$TMP
+
+export ORACLE_HOSTNAME=dwhnode01
+export ORACLE_UNQNAME=dwhdb01
+export ORACLE_BASE=/data01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/19.0.0/dbhome_1
+export ORA_INVENTORY=/data01/app/oraInventory
+export ORACLE_SID=dwhdb01
+export DATA_DIR=/data01/oradata
+
+export PATH=/usr/sbin:/usr/local/bin:$PATH
+export PATH=$ORACLE_HOME/bin:$PATH
+
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+
+
+
+FILE_NAME="NEW_SMSC_EXT"  export FILE_NAME
+
+##echo "-------------------------------- $1 --------------------------------"
+echo "Create table started at `date \"+%D %T\"`"
+
+SYN_TYPE="NEW_SMSC" export SYN_TYPE
+echo $SYN_TYPE
+
+sqlplus -s <<EOF
+dwh_user/dwh_user_123
+set feedback off
+drop table $FILE_NAME
+/
+create table $FILE_NAME
+(
+SMC1_TIME_SERIAL_NUMBER      VARCHAR2(56 BYTE),
+SMC2_SM_ID                   VARCHAR2(56 BYTE),
+SMC3_ORIGINAL_DELIVERY_ADDR  VARCHAR2(56 BYTE),
+SMC4_TON_OF_ORIGINAL_DELIVE  VARCHAR2(56 BYTE),
+SMC5_NPI_OF_ORIGINAL_DELIVE  VARCHAR2(56 BYTE),
+SMC6_DESTINATION_DELIVERY_A  VARCHAR2(56 BYTE),
+SMC7_TON_DESTINATION_DELIVE  VARCHAR2(56 BYTE),
+SMC8_NPI_DESTINATION_DELIVE  VARCHAR2(56 BYTE),
+SMC9_ORG_SUBMISSION_TIME     VARCHAR2(56 BYTE),
+SMC10_FINAL_TIME             VARCHAR2(56 BYTE),
+SMC11_SRR                    VARCHAR2(56 BYTE),
+SMC12_PID                    VARCHAR2(56 BYTE),
+SMC13_DCS                    VARCHAR2(56 BYTE),
+SMC14_SM_LENGTH              VARCHAR2(56 BYTE),
+SMC15_SMSTATUS               VARCHAR2(56 BYTE),
+SMC16_ERROR_CODE             VARCHAR2(56 BYTE),
+SMC17_DESCRIPTION_PPS_USER   VARCHAR2(56 BYTE),
+SMC18_CHARGEBILLPOINT        VARCHAR2(56 BYTE),
+SMC19_MESSAGETYPE            VARCHAR2(56 BYTE),
+SMC20_DELIVERCOUNT           VARCHAR2(56 BYTE),
+SMC21_LASTERR                VARCHAR2(56 BYTE),
+SMC22_UDHI                   VARCHAR2(56 BYTE),
+SMC23_RN                     VARCHAR2(56 BYTE),
+SMC24_MN                     VARCHAR2(56 BYTE),
+SMC25_SN                     VARCHAR2(56 BYTE),
+SMC26_MOMSCADDR              VARCHAR2(56 BYTE),
+SMC27_MTMSCADDR              VARCHAR2(56 BYTE),
+SMC28_ORGIMSI                VARCHAR2(56 BYTE),
+SMC29_DESTIMSI               VARCHAR2(56 BYTE),
+SMC30_ORGACCOUNT             VARCHAR2(56 BYTE),
+SMC31_DESTACCOUNT            VARCHAR2(56 BYTE),
+SMC32_MOSCADDRESS            VARCHAR2(56 BYTE),
+SMC33_CELLID                 VARCHAR2(256 BYTE)
+)
+ORGANIZATION EXTERNAL
+  (  TYPE ORACLE_LOADER
+     DEFAULT DIRECTORY NEW_SMSC_DIR
+        ACCESS PARAMETERS
+       ( RECORDS DELIMITED by NEWLINE
+        skip 1
+        PREPROCESSOR execdir:'cat'
+        BADFILE     '$1.bad'
+        DISCARDFILE '$1.dis'
+        FIELDS TERMINATED BY ','
+	MISSING FIELD VALUES ARE NULL
+ )
+     LOCATION (NEW_SMSC_DIR:'$1.txt')
+  )
+REJECT LIMIT UNLIMITED
+NOPARALLEL
+NOMONITORING
+/
+drop synonym  $SYN_TYPE
+/
+create synonym  $SYN_TYPE for $FILE_NAME
+/
+exit
+EOF
+
+echo "External table created"
+

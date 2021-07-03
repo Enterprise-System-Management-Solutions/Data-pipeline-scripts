@@ -1,0 +1,8 @@
+--
+-- VOICE_0605_TAB  (Directory) 
+--
+CREATE OR REPLACE DIRECTORY 
+VOICE_0605_TAB AS 
+'/data01/saf/';
+
+

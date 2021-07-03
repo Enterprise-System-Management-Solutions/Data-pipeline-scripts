@@ -1,0 +1,3 @@
+/data01/
+/data01/oradata
+/data01/cbs

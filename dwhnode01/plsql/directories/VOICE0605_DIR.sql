@@ -1,0 +1,8 @@
+--
+-- VOICE0605_DIR  (Directory) 
+--
+CREATE OR REPLACE DIRECTORY 
+VOICE0605_DIR AS 
+'/data02/dwh_dir';
+
+

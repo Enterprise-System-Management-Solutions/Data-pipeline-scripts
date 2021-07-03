@@ -1,0 +1,50 @@
+PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+export PATH
+
+export TMP=/tmp
+export TMPDIR=$TMP
+
+export ORACLE_HOSTNAME=dwhnode01
+export ORACLE_UNQNAME=dwhdb01
+export ORACLE_BASE=/data01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/19.0.0/dbhome_1
+export ORA_INVENTORY=/data01/app/oraInventory
+export ORACLE_SID=dwhdb01
+export DATA_DIR=/data01/oradata
+
+export PATH=/usr/sbin:/usr/local/bin:$PATH
+export PATH=$ORACLE_HOME/bin:$PATH
+
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+
+--dt=`date -d yesterday  '+%d%m%Y'`
+xdir=/tmp/MSC_HUAWEI_DUMP_20200610.csv
+
+
+sqlplus  -s <<EOF
+dwh_user/dwh_user_123
+SET ECHO OFF
+SET WRAP OFF
+SET HEAD OFF
+SET FEEDBACK OFF
+SET TRIMSPOOL ON
+SET HEADSEP ON
+SET TERMOUT OFF
+SET UNDERLINE OFF
+SET LINESIZE 32000;
+SET PAGESIZE 40000;
+SET LONG 50000;
+SPOOL $xdir
+REM "WHENEVER SQLERROR EXIT SQL.SQLCODE"
+SELECT /*+ PARALLEL (A,16)*/ MH01_CALLTYPE||'|'||MH02_SERVEDIMSI||'|'||MH03_SERVEDIMEI||'|'||MH04_APARTYMSISDN||'|'||MH05_BPARTYMSISDN||'|'||MH06_FORWARDINGMSISDN||'|'||MH07_ORIGINATIONTIME||'|'||MH08_CALLDURATION||'|'||MH09_CAUSEFORTERM||'|'||MH10_GLOBAAREAID||'|'||FILE_FLAG
+AS custom_query
+FROM L1_MSC_HUAWEI_DUMP A
+WHERE SUBSTR(MH07_ORIGINATIONTIME,1,6)='200610';
+/
+EXIT
+EOF
+
+echo "File Exported "
+

@@ -1,0 +1,6 @@
+hostname:	dwhnode01
+ip	: 	192.168.61.202
+user	:	root,dwhadmin
+purpose	:	CBS,Free unit offer dump, ETSAF, ERP
+DB user	:	dwh_user
+
