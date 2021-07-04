@@ -1,0 +1,143 @@
+PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+export PATH
+
+export TMP=/tmp
+export TMPDIR=$TMP
+
+export ORACLE_HOSTNAME=dwhnode05
+export ORACLE_UNQNAME=dwhdb05
+export ORACLE_BASE=/data01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/19.0.0/dbhome_1
+export ORA_INVENTORY=/data01/app/oraInventory
+export ORACLE_SID=dwhdb05
+export DATA_DIR=/data01/oradata
+
+export PATH=/usr/sbin:/usr/local/bin:$PATH
+export PATH=$ORACLE_HOME/bin:$PATH
+
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+
+
+# This function changes the status of files where errors where encountered to 34
+updateOnError()
+{
+sqlplus  -s <<EOF
+dwh_user/dwh_user_123
+SET echo off
+SET head off
+SET feedback off
+REM "WHENEVER SQLERROR EXIT SQL.SQLCODE"
+UPDATE cdr_head
+   SET process_status=34
+ WHERE file_name='$1'
+   AND process_status=30
+/
+COMMIT
+/
+EXIT
+EOF
+}
+
+# This function lists files after mediation and status is =30
+
+get_smsc_files()
+{
+
+sqlplus  -s <<EOF
+dwh_user/dwh_user_123
+SET head off
+SET feedback off
+SET pagesize 0
+SET verify off
+SET linesize 400
+SELECT '/data02/card/evcTRA/process/'||','||'/data02/card/evcTRA/process/'||file_name||','||file_name||','||file_id
+  FROM cdr_head
+ WHERE source='evcTRA'
+   AND process_status=30
+   and rownum < 1000
+/
+EOF
+}
+
+
+createSMSCUpdate()
+{
+sqlplus  -s <<EOF
+dwh_user/dwh_user_123
+SET echo on
+SET head off
+SET feedback off
+WHENEVER SQLERROR EXIT SQL.SQLCODE
+
+UPDATE cdr_head
+   SET process_status=32
+ WHERE source='evcTRA'
+   AND file_name='$1'
+/
+COMMIT
+/
+EXIT
+EOF
+}
+
+insertSMSCUpdate()
+{
+sqlplus  -s <<EOF
+dwh_user/dwh_user_123
+SET echo on
+SET head off
+SET feedback off
+WHENEVER SQLERROR EXIT SQL.SQLCODE
+
+INSERT INTO L1_EVCTRA(PROCESSED_DATE,FILE_NAME,EVAC_01_SERIAL_NUMBER,EVAC_02_REGION_ID,EVAC_03_MSISDN_DEALER,EVAC_04_INITIATOR_ID,EVAC_05_DEALER_NAME,EVAC_06_MSISDN_BENEFICIARY,EVAC_07_RECIPIENT_ID,EVAC_08_DEALER_NAME,EVAC_09_PRICE_TYPE,EVAC_10_AMOUNT_ROLLBACK,EVAC_11_SENDER_TRANSACTION,EVAC_12_TRANSFER_DATE,EVAC_13_STATE,EVAC_14_ERROR_MESSAGE,EVAC_15_ACCESS_TYPE,EVAC_16_DEALER_ACTUAL_DECREASE_MONEY,EVAC_17_ACCEPTOR_ACTUAL_INCREASE_MONEY,EVAC_18_TRANSFER_TRANSACTION_COMMISSION_RATE,EVAC_19_SENDER_TEMPLATE_ID,EVAC_20_RECEIVER_TEMPLATE_ID,EVAC_21_SENDER_BALANCE_STOCK_ADJUSTOR,EVAC_22_TRANSFER_HANDLING_FEE,EVAC_23_TAX,EVAC_24_RECEIVER_BALANCE_AFTER_ADJUSTOR,EVAC_25_RECEIVER_BALANCE_BEFORE_ADJUSTOR,EVAC_26_CELL_ID,EVAC_27_SOURCE_MESSAGE,EVAC_28_DESTINATION_MESSAGE,EVAC_29_DENOMINATION_NUMBER,EVAC_30_QUANTITY,EVAC_31_ACCOUNT_INDEX,EVAC_32_ACTUAL_PAYMENT_AMOUNT,EVAC_33_RESERVED,EVAC_34_CELL_ID_TRANSFEREE,EVAC_35_RESERVED,EVAC_36_BRAND_TYPE,EVAC_37_RESERVED)
+(SELECT TO_DATE(TO_CHAR(SYSDATE, 'MM/DD/YYYY'), 'MM/DD/YYYY'), '$1', EVAC_01_SERIAL_NUMBER,EVAC_02_REGION_ID,EVAC_03_MSISDN_DEALER,EVAC_04_INITIATOR_ID,EVAC_05_DEALER_NAME,EVAC_06_MSISDN_BENEFICIARY,EVAC_07_RECIPIENT_ID,EVAC_08_DEALER_NAME,EVAC_09_PRICE_TYPE,EVAC_10_AMOUNT_ROLLBACK,EVAC_11_SENDER_TRANSACTION,EVAC_12_TRANSFER_DATE,EVAC_13_STATE,EVAC_14_ERROR_MESSAGE,EVAC_15_ACCESS_TYPE,EVAC_16_DEALER_ACTUAL_DECREASE_MONEY,EVAC_17_ACCEPTOR_ACTUAL_INCREASE_MONEY,EVAC_18_TRANSFER_TRANSACTION_COMMISSION_RATE,EVAC_19_SENDER_TEMPLATE_ID,EVAC_20_RECEIVER_TEMPLATE_ID,EVAC_21_SENDER_BALANCE_STOCK_ADJUSTOR,EVAC_22_TRANSFER_HANDLING_FEE,EVAC_23_TAX,EVAC_24_RECEIVER_BALANCE_AFTER_ADJUSTOR,EVAC_25_RECEIVER_BALANCE_BEFORE_ADJUSTOR,EVAC_26_CELL_ID,EVAC_27_SOURCE_MESSAGE,EVAC_28_DESTINATION_MESSAGE,EVAC_29_DENOMINATION_NUMBER,EVAC_30_QUANTITY,EVAC_31_ACCOUNT_INDEX,EVAC_32_ACTUAL_PAYMENT_AMOUNT,EVAC_33_RESERVED,EVAC_34_CELL_ID_TRANSFEREE,EVAC_35_RESERVED,EVAC_36_BRAND_TYPE,EVAC_37_RESERVED FROM EVCTRA_EXT)
+/
+COMMIT
+/
+UPDATE cdr_head
+   SET process_status=96
+ WHERE source='evcTRA'
+   AND file_name='$1'
+/
+COMMIT
+/
+EXIT
+EOF
+}
+
+# ======= SMSC SECTION =====
+
+lock=/data02/scripts/dwh/lock/evcTRA_lock  export lock
+
+if [ -f $lock ] ; then
+exit 2
+
+else
+touch $lock
+
+fileList=`get_smsc_files`
+
+for fil in $fileList
+do
+
+v3=`echo ${fil}|sed s/,/\ /g|awk '{print $3}'`   ### file name
+v4=`echo ${fil}|sed s/,/\ /g|awk '{print $4}'`   ### file id
+
+cd /data02/scripts/dwh/file_loader/
+sh create_evcTRA_ext_tab.sh $v3
+createSMSCUpdate $v3
+insertSMSCUpdate $v3
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+updateOnError $v3 $v4
+#~~~~~~~~~~~~~~~~~~~~~~~~~
+
+done
+
+rm -f $lock
+
+fi
+

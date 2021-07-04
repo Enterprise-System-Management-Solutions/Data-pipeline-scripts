@@ -1,0 +1,49 @@
+######File Reg
+03,33 * * * * /data02/scripts/dwh/file_reg/file_registration.sh evcTRA
+3,33 * * * * /data02/scripts/dwh/file_reg/file_registration.sh evcREC
+3,33 * * * * /data02/scripts/dwh/file_reg/cron_file_registration_alarm.sh
+
+####File Load
+08,38 * * * * /data02/scripts/dwh/file_loader/evcREC_loader.sh
+08,38 * * * * /data02/scripts/dwh/file_loader/evcTRA_loader.sh
+08,38 * * * * /data02/scripts/dwh/file_loader/fm_alarm_loader.sh
+
+####File Del EVC##
+15,45 * * * * /data02/scripts/dwh/file_del/cron_file_del.sh
+
+### Delete Alarm log##
+15,45 * * * * /data02/scripts/dwh/file_del/file_del_alarm_log.sh
+
+###File Reg HuaweiUDN##
+##*/10 * * * * /data02/scripts/dwh/ipdr_load/file_reg_HuaweiUDN.sh
+##*/10 * * * * /data02/scripts/dwh/ipdr_load/file_reg_HuaweiUDN_2.sh
+* * * * * /data02/scripts/dwh/ipdr_load/cron_reg_HuaweiUDN.sh
+
+###File Load HuaweiUDN ##
+##05,25,45 * * * * /data02/scripts/dwh/ipdr_load/HuaweiUDN_load.sh
+* * * * * /data02/scripts/dwh/ipdr_load/HuaweiUDN_load.sh
+* * * * * /data02/scripts/dwh/ipdr_load/HuaweiUDN_load_2.sh
+
+##failour cdr_update and reload
+02,30 * * * * /data02/scripts/dwh/others/failour_cdr_update.sh
+03,33 * * * * /data02/scripts/dwh/ipdr_load/HuaweiUDN_load_3.sh
+
+####File Del HuaweiUDN ##
+*/55 * * * * /data02/scripts/dwh/file_del/file_del_HuaweiUDN.sh
+##05,30 * * * * /data02/scripts/dwh/file_del/file_del_HuaweiUDN_2.sh
+
+##insert ipdr file id #
+#*/30 * * * * /data02/scripts/dwh/others/ipdr_file_id_220321.sh
+
+###IPDR Data export(shahin) ##
+##30 6 * * * /data02/scripts/dwh/ipdr_load/csv.sh
+##0 7 * * * /data02/scripts/dwh/ipdr_load/ipdr_993.sh
+
+### IPDR Partition Drop##
+05 16 * * * /data02/scripts/dwh/partition_compress/drop_partition_udn.sh
+05 16 * * * /data02/scripts/dwh/partition_compress/drop_partition_udn2.sh
+
+###SMS Alart Every 02 Hour##
+0 */2 * * * /data02/scripts/dwh/sms_alert/sms_alert.sh
+0 */2 * * * /data02/scripts/dwh/sms_alert/tablespace_sms_alert.sh
+0 */2 * * * /data02/scripts/dwh/sms_alert/sms_alert_mount_storage.sh

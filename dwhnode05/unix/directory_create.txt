@@ -1,0 +1,6 @@
+-----------------create directory---------------
+find . -type d > dirs.txt
+to create the list of directories, then
+
+xargs mkdir -p < dirs.txt
+to create the directories on the destination.

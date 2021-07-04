@@ -1,0 +1,15 @@
+### File move
+00,30 * * * * /data02/scripts/dwh/file_move/file_move.sh
+
+
+##File move (HuaweiUDN)##
+00,30 * * * * /data02/scripts/dwh/file_move/file_move_HuaweiUDN.sh
+
+##File move Alarm Log##
+05,55 * * * * /data02/scripts/dwh/file_move/file_move_u2000.sh
+0 1 * * * /data02/scripts/dwh/file_move/file_move_u2000_backlog.sh
+
+##ipdr###
+##0 9 * * * /data02/scripts/dwh/ipdr_load/csv.sh
+##0 9 * * * /data02/scripts/dwh/ipdr_load/ipdr_993.sh
+
