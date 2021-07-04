@@ -1,3 +1,4 @@
+This is a command  to generate directory from backup file.
 -----------------create directory---------------
 find . -type d > dirs.txt
 to create the list of directories, then
