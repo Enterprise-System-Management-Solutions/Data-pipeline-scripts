@@ -1,0 +1,6 @@
+hostname:	mediation01
+ip	: 	192.168.61.253
+user	:	root, dwhadmin
+purpose	:	Landing servers (MSC, MFS, CBS and FUO CDRs landing this server)
+DB user	:	N/A
+
