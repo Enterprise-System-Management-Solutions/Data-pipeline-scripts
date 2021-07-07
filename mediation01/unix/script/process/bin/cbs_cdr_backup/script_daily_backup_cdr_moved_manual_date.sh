@@ -1,0 +1,267 @@
+#Author :       Tareq Aziz
+#Date   :       20-06-2020
+#Purpose:       manual date row cdr backup
+
+cd /data02/cbs_dump/
+
+dt=$1
+
+dir=${dt}_3
+mkdir $dir
+
+
+mv cbs_cdr_voice_${dt}00* $dir
+mv cbs_cdr_voice_${dt}01* $dir
+mv cbs_cdr_voice_${dt}02* $dir
+mv cbs_cdr_voice_${dt}03* $dir
+mv cbs_cdr_voice_${dt}04* $dir
+mv cbs_cdr_voice_${dt}05* $dir
+mv cbs_cdr_voice_${dt}06* $dir
+mv cbs_cdr_voice_${dt}07* $dir
+mv cbs_cdr_voice_${dt}08* $dir
+mv cbs_cdr_voice_${dt}09* $dir
+mv cbs_cdr_voice_${dt}10* $dir
+mv cbs_cdr_voice_${dt}11* $dir
+mv cbs_cdr_voice_${dt}12* $dir
+mv cbs_cdr_voice_${dt}13* $dir
+mv cbs_cdr_voice_${dt}14* $dir
+mv cbs_cdr_voice_${dt}15* $dir
+mv cbs_cdr_voice_${dt}16* $dir
+mv cbs_cdr_voice_${dt}17* $dir
+mv cbs_cdr_voice_${dt}18* $dir
+mv cbs_cdr_voice_${dt}19* $dir
+mv cbs_cdr_voice_${dt}20* $dir
+mv cbs_cdr_voice_${dt}21* $dir
+mv cbs_cdr_voice_${dt}22* $dir
+mv cbs_cdr_voice_${dt}23* $dir
+echo "======voice moved $dir completed====="
+
+mv cbs_cdr_data_${dt}00* $dir
+mv cbs_cdr_data_${dt}01* $dir
+mv cbs_cdr_data_${dt}02* $dir
+mv cbs_cdr_data_${dt}03* $dir
+mv cbs_cdr_data_${dt}04* $dir
+mv cbs_cdr_data_${dt}05* $dir
+mv cbs_cdr_data_${dt}06* $dir
+mv cbs_cdr_data_${dt}07* $dir
+mv cbs_cdr_data_${dt}08* $dir
+mv cbs_cdr_data_${dt}09* $dir
+mv cbs_cdr_data_${dt}10* $dir
+mv cbs_cdr_data_${dt}11* $dir
+mv cbs_cdr_data_${dt}12* $dir
+mv cbs_cdr_data_${dt}13* $dir
+mv cbs_cdr_data_${dt}14* $dir
+mv cbs_cdr_data_${dt}15* $dir
+mv cbs_cdr_data_${dt}16* $dir
+mv cbs_cdr_data_${dt}17* $dir
+mv cbs_cdr_data_${dt}18* $dir
+mv cbs_cdr_data_${dt}19* $dir
+mv cbs_cdr_data_${dt}20* $dir
+mv cbs_cdr_data_${dt}21* $dir
+mv cbs_cdr_data_${dt}22* $dir
+mv cbs_cdr_data_${dt}23* $dir
+echo "======data moved $dir completed====="
+mv cbs_cdr_sms_${dt}00* $dir
+mv cbs_cdr_sms_${dt}01* $dir
+mv cbs_cdr_sms_${dt}02* $dir
+mv cbs_cdr_sms_${dt}03* $dir
+mv cbs_cdr_sms_${dt}04* $dir
+mv cbs_cdr_sms_${dt}05* $dir
+mv cbs_cdr_sms_${dt}06* $dir
+mv cbs_cdr_sms_${dt}07* $dir
+mv cbs_cdr_sms_${dt}08* $dir
+mv cbs_cdr_sms_${dt}09* $dir
+mv cbs_cdr_sms_${dt}10* $dir
+mv cbs_cdr_sms_${dt}11* $dir
+mv cbs_cdr_sms_${dt}12* $dir
+mv cbs_cdr_sms_${dt}13* $dir
+mv cbs_cdr_sms_${dt}14* $dir
+mv cbs_cdr_sms_${dt}15* $dir
+mv cbs_cdr_sms_${dt}16* $dir
+mv cbs_cdr_sms_${dt}17* $dir
+mv cbs_cdr_sms_${dt}18* $dir
+mv cbs_cdr_sms_${dt}19* $dir
+mv cbs_cdr_sms_${dt}20* $dir
+mv cbs_cdr_sms_${dt}21* $dir
+mv cbs_cdr_sms_${dt}22* $dir
+mv cbs_cdr_sms_${dt}23* $dir
+echo "======sms moved $dir completed====="
+mv cbs_cdr_mon_${dt}00* $dir
+mv cbs_cdr_mon_${dt}01* $dir
+mv cbs_cdr_mon_${dt}02* $dir
+mv cbs_cdr_mon_${dt}03* $dir
+mv cbs_cdr_mon_${dt}04* $dir
+mv cbs_cdr_mon_${dt}05* $dir
+mv cbs_cdr_mon_${dt}06* $dir
+mv cbs_cdr_mon_${dt}07* $dir
+mv cbs_cdr_mon_${dt}08* $dir
+mv cbs_cdr_mon_${dt}09* $dir
+mv cbs_cdr_mon_${dt}10* $dir
+mv cbs_cdr_mon_${dt}11* $dir
+mv cbs_cdr_mon_${dt}12* $dir
+mv cbs_cdr_mon_${dt}13* $dir
+mv cbs_cdr_mon_${dt}14* $dir
+mv cbs_cdr_mon_${dt}15* $dir
+mv cbs_cdr_mon_${dt}16* $dir
+mv cbs_cdr_mon_${dt}17* $dir
+mv cbs_cdr_mon_${dt}18* $dir
+mv cbs_cdr_mon_${dt}19* $dir
+mv cbs_cdr_mon_${dt}20* $dir
+mv cbs_cdr_mon_${dt}21* $dir
+mv cbs_cdr_mon_${dt}22* $dir
+mv cbs_cdr_mon_${dt}23* $dir
+echo "======mon moved $dir completed====="
+mv cbs_cdr_vou_${dt}00* $dir
+mv cbs_cdr_vou_${dt}01* $dir
+mv cbs_cdr_vou_${dt}02* $dir
+mv cbs_cdr_vou_${dt}03* $dir
+mv cbs_cdr_vou_${dt}04* $dir
+mv cbs_cdr_vou_${dt}05* $dir
+mv cbs_cdr_vou_${dt}06* $dir
+mv cbs_cdr_vou_${dt}07* $dir
+mv cbs_cdr_vou_${dt}08* $dir
+mv cbs_cdr_vou_${dt}09* $dir
+mv cbs_cdr_vou_${dt}10* $dir
+mv cbs_cdr_vou_${dt}11* $dir
+mv cbs_cdr_vou_${dt}12* $dir
+mv cbs_cdr_vou_${dt}13* $dir
+mv cbs_cdr_vou_${dt}14* $dir
+mv cbs_cdr_vou_${dt}15* $dir
+mv cbs_cdr_vou_${dt}16* $dir
+mv cbs_cdr_vou_${dt}17* $dir
+mv cbs_cdr_vou_${dt}18* $dir
+mv cbs_cdr_vou_${dt}19* $dir
+mv cbs_cdr_vou_${dt}20* $dir
+mv cbs_cdr_vou_${dt}21* $dir
+mv cbs_cdr_vou_${dt}22* $dir
+mv cbs_cdr_vou_${dt}23* $dir
+echo "======vou moved $dir completed====="
+mv cbs_cdr_adj_${dt}00* $dir
+mv cbs_cdr_adj_${dt}01* $dir
+mv cbs_cdr_adj_${dt}02* $dir
+mv cbs_cdr_adj_${dt}03* $dir
+mv cbs_cdr_adj_${dt}04* $dir
+mv cbs_cdr_adj_${dt}05* $dir
+mv cbs_cdr_adj_${dt}06* $dir
+mv cbs_cdr_adj_${dt}07* $dir
+mv cbs_cdr_adj_${dt}08* $dir
+mv cbs_cdr_adj_${dt}09* $dir
+mv cbs_cdr_adj_${dt}10* $dir
+mv cbs_cdr_adj_${dt}11* $dir
+mv cbs_cdr_adj_${dt}12* $dir
+mv cbs_cdr_adj_${dt}13* $dir
+mv cbs_cdr_adj_${dt}14* $dir
+mv cbs_cdr_adj_${dt}15* $dir
+mv cbs_cdr_adj_${dt}16* $dir
+mv cbs_cdr_adj_${dt}17* $dir
+mv cbs_cdr_adj_${dt}18* $dir
+mv cbs_cdr_adj_${dt}19* $dir
+mv cbs_cdr_adj_${dt}20* $dir
+mv cbs_cdr_adj_${dt}21* $dir
+mv cbs_cdr_adj_${dt}22* $dir
+mv cbs_cdr_adj_${dt}23* $dir
+echo "======adj moved $dir completed====="
+mv cbs_cdr_com_${dt}00* $dir
+mv cbs_cdr_com_${dt}01* $dir
+mv cbs_cdr_com_${dt}02* $dir
+mv cbs_cdr_com_${dt}03* $dir
+mv cbs_cdr_com_${dt}04* $dir
+mv cbs_cdr_com_${dt}05* $dir
+mv cbs_cdr_com_${dt}06* $dir
+mv cbs_cdr_com_${dt}07* $dir
+mv cbs_cdr_com_${dt}08* $dir
+mv cbs_cdr_com_${dt}09* $dir
+mv cbs_cdr_com_${dt}10* $dir
+mv cbs_cdr_com_${dt}11* $dir
+mv cbs_cdr_com_${dt}12* $dir
+mv cbs_cdr_com_${dt}13* $dir
+mv cbs_cdr_com_${dt}14* $dir
+mv cbs_cdr_com_${dt}15* $dir
+mv cbs_cdr_com_${dt}16* $dir
+mv cbs_cdr_com_${dt}17* $dir
+mv cbs_cdr_com_${dt}18* $dir
+mv cbs_cdr_com_${dt}19* $dir
+mv cbs_cdr_com_${dt}20* $dir
+mv cbs_cdr_com_${dt}21* $dir
+mv cbs_cdr_com_${dt}22* $dir
+mv cbs_cdr_com_${dt}23* $dir
+echo "======com moved $dir completed====="
+mv cbs_cdr_transfer_${dt}00* $dir
+mv cbs_cdr_transfer_${dt}01* $dir
+mv cbs_cdr_transfer_${dt}02* $dir
+mv cbs_cdr_transfer_${dt}03* $dir
+mv cbs_cdr_transfer_${dt}04* $dir
+mv cbs_cdr_transfer_${dt}05* $dir
+mv cbs_cdr_transfer_${dt}06* $dir
+mv cbs_cdr_transfer_${dt}07* $dir
+mv cbs_cdr_transfer_${dt}08* $dir
+mv cbs_cdr_transfer_${dt}09* $dir
+mv cbs_cdr_transfer_${dt}10* $dir
+mv cbs_cdr_transfer_${dt}11* $dir
+mv cbs_cdr_transfer_${dt}12* $dir
+mv cbs_cdr_transfer_${dt}13* $dir
+mv cbs_cdr_transfer_${dt}14* $dir
+mv cbs_cdr_transfer_${dt}15* $dir
+mv cbs_cdr_transfer_${dt}16* $dir
+mv cbs_cdr_transfer_${dt}17* $dir
+mv cbs_cdr_transfer_${dt}18* $dir
+mv cbs_cdr_transfer_${dt}19* $dir
+mv cbs_cdr_transfer_${dt}20* $dir
+mv cbs_cdr_transfer_${dt}21* $dir
+mv cbs_cdr_transfer_${dt}22* $dir
+mv cbs_cdr_transfer_${dt}23* $dir
+echo "======transfer moved $dir completed====="
+mv cbs_cdr_clr_${dt}00* $dir
+mv cbs_cdr_clr_${dt}01* $dir
+mv cbs_cdr_clr_${dt}02* $dir
+mv cbs_cdr_clr_${dt}03* $dir
+mv cbs_cdr_clr_${dt}04* $dir
+mv cbs_cdr_clr_${dt}05* $dir
+mv cbs_cdr_clr_${dt}06* $dir
+mv cbs_cdr_clr_${dt}07* $dir
+mv cbs_cdr_clr_${dt}08* $dir
+mv cbs_cdr_clr_${dt}09* $dir
+mv cbs_cdr_clr_${dt}10* $dir
+mv cbs_cdr_clr_${dt}11* $dir
+mv cbs_cdr_clr_${dt}12* $dir
+mv cbs_cdr_clr_${dt}13* $dir
+mv cbs_cdr_clr_${dt}14* $dir
+mv cbs_cdr_clr_${dt}15* $dir
+mv cbs_cdr_clr_${dt}16* $dir
+mv cbs_cdr_clr_${dt}17* $dir
+mv cbs_cdr_clr_${dt}18* $dir
+mv cbs_cdr_clr_${dt}19* $dir
+mv cbs_cdr_clr_${dt}20* $dir
+mv cbs_cdr_clr_${dt}21* $dir
+mv cbs_cdr_clr_${dt}22* $dir
+mv cbs_cdr_clr_${dt}23* $dir
+echo "======clr moved $dir completed====="
+mv cbs_cdr_cm_${dt}00* $dir
+mv cbs_cdr_cm_${dt}01* $dir
+mv cbs_cdr_cm_${dt}02* $dir
+mv cbs_cdr_cm_${dt}03* $dir
+mv cbs_cdr_cm_${dt}04* $dir
+mv cbs_cdr_cm_${dt}05* $dir
+mv cbs_cdr_cm_${dt}06* $dir
+mv cbs_cdr_cm_${dt}07* $dir
+mv cbs_cdr_cm_${dt}08* $dir
+mv cbs_cdr_cm_${dt}09* $dir
+mv cbs_cdr_cm_${dt}10* $dir
+mv cbs_cdr_cm_${dt}11* $dir
+mv cbs_cdr_cm_${dt}12* $dir
+mv cbs_cdr_cm_${dt}13* $dir
+mv cbs_cdr_cm_${dt}14* $dir
+mv cbs_cdr_cm_${dt}15* $dir
+mv cbs_cdr_cm_${dt}16* $dir
+mv cbs_cdr_cm_${dt}17* $dir
+mv cbs_cdr_cm_${dt}18* $dir
+mv cbs_cdr_cm_${dt}19* $dir
+mv cbs_cdr_cm_${dt}20* $dir
+mv cbs_cdr_cm_${dt}21* $dir
+mv cbs_cdr_cm_${dt}22* $dir
+mv cbs_cdr_cm_${dt}23* $dir
+echo "======cm moved $dir completed====="
+sleep 5
+tar -zcvf   CBS_${dir}.gz.tar $dir
+sleep 5
+rm -rf $dir

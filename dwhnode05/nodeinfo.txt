@@ -1,0 +1,6 @@
+hostname:	dwhnode05
+ip	: 	192.168.61.20
+user	:	root, dwhadmin
+purpose	:	IPDR,EVC,Alarm log
+DB user	:	dwh_user
+

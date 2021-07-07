@@ -1,5 +1,4 @@
 /data01/
-/data01/oradata
 /data01/card
 /data01/card/.cache
 /data01/card/.cache/abrt
