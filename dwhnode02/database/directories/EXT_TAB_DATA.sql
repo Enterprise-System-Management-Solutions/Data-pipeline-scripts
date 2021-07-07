@@ -1,0 +1,8 @@
+--
+-- EXT_TAB_DATA  (Directory) 
+--
+CREATE OR REPLACE DIRECTORY 
+EXT_TAB_DATA AS 
+'/tmp';
+
+

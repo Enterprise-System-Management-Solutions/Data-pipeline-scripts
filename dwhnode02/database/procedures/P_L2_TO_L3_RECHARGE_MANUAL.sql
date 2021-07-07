@@ -1,0 +1,106 @@
+--
+-- P_L2_TO_L3_RECHARGE_MANUAL  (Procedure) 
+--
+CREATE OR REPLACE PROCEDURE DWH_USER.P_L2_TO_L3_RECHARGE_MANUAL (P_PROCESS_DATE VARCHAR2) IS
+    VCOUNT NUMBER;
+    VDATE_KEY NUMBER;
+    VL2STATUS NUMBER;
+    VL3STATUS NUMBER;
+    VDATE DATE := TO_DATE(TO_DATE(P_PROCESS_DATE,'YYYYMMDD'),'DD/MM/RRRR');
+BEGIN
+    SELECT DATE_KEY INTO VDATE_KEY 
+    FROM DATE_DIM@DWH05TODWH01
+    WHERE DATE_KEY = (SELECT A.DATE_KEY FROM DATE_DIM A WHERE A.DATE_VALUE = VDATE);--(SELECT A.DATE_KEY FROM DATE_DIM A WHERE TO_DATE(A.DATE_VALUE,'DD/MM/YYYY') = TO_DATE(SYSDATE,'DD/MM/YYYY'));
+
+        INSERT INTO L3_RECHARGE
+        SELECT /*+ PARALLEL(A,16) */
+        ETL_DATE_KEY             ,
+        RE2_RECHARGE_CODE      ,
+        RE3_RECHARGE_AMT       ,
+        RE4_ACCT_ID            ,
+        RE5_SUB_ID             ,
+        RE6_PRI_IDENTITY       ,
+        RE9_ORIGINAL_AMT       ,
+        RE18_PAYMENT_TYPE      ,
+        RE19_RECHARGE_TAX      ,
+        RE21_RECHARGE_TYPE     ,
+        RE22_CHANNEL_ID        ,
+        RE24_RESULT_CODE       ,
+        RE25_ERROR_TYPE        ,
+        RE30_ENTRY_DATE_KEY    ,
+        RE42_REGION_ID         ,
+        RE43_REGION_CODE       ,
+        RE47_CARD_STATUS       ,
+        RE50_CARD_AMOUNT    ,
+        RE69_CUR_BALANCE      ,
+        RE170_CUR_AMOUNT       ,
+        RE486_RECHARGEAREACODE ,
+        RE487_RECHARGECELLID   ,
+        RE489_MAINOFFERINGID   ,
+        RE490_PAYTYPE,
+        RE501_AGENTNAME,
+        RE30_ENTRY_HOUR
+        FROM L2_RECHARGE@DWH05TODWH01 A
+        WHERE ETL_DATE_KEY= VDATE_KEY;
+        COMMIT;
+        /*ETL_DATE_KEY             ,
+        RE2_RECHARGE_CODE      ,
+        SUM(RE3_RECHARGE_AMT)       ,
+        RE4_ACCT_ID            ,
+        RE5_SUB_ID             ,
+        RE6_PRI_IDENTITY       ,
+        RE9_ORIGINAL_AMT       ,
+        RE18_PAYMENT_TYPE      ,
+        RE19_RECHARGE_TAX      ,
+        RE21_RECHARGE_TYPE     ,
+        RE22_CHANNEL_ID        ,
+        RE24_RESULT_CODE       ,
+        RE25_ERROR_TYPE        ,
+        RE30_ENTRY_DATE_KEY    ,
+        RE42_REGION_ID         ,
+        RE43_REGION_CODE       ,
+        RE47_CARD_STATUS       ,
+        SUM(RE50_CARD_AMOUNT )      ,
+        SUM(RE69_CUR_BALANCE)       ,
+        SUM(RE170_CUR_AMOUNT)       ,
+        RE486_RECHARGEAREACODE ,
+        RE487_RECHARGECELLID   ,
+        RE489_MAINOFFERINGID   ,
+        RE490_PAYTYPE,
+        RE501_AGENTNAME,
+        RE30_ENTRY_HOUR
+        FROM L2_RECHARGE@DWH05TODWH01 A
+        WHERE ETL_DATE_KEY= VDATE_KEY
+        GROUP BY 
+        ETL_DATE_KEY ,
+        RE2_RECHARGE_CODE      ,
+        RE4_ACCT_ID            ,
+        RE5_SUB_ID             ,
+        RE6_PRI_IDENTITY       ,
+        RE9_ORIGINAL_AMT       ,
+        RE18_PAYMENT_TYPE      ,
+        RE19_RECHARGE_TAX      ,
+        RE21_RECHARGE_TYPE     ,
+        RE22_CHANNEL_ID        ,
+        RE24_RESULT_CODE       ,
+        RE25_ERROR_TYPE        ,
+        RE30_ENTRY_DATE_KEY    ,
+        RE42_REGION_ID         ,
+        RE43_REGION_CODE       ,
+        RE47_CARD_STATUS       ,
+        RE486_RECHARGEAREACODE ,
+        RE487_RECHARGECELLID   ,
+        RE489_MAINOFFERINGID   ,
+        RE490_PAYTYPE,
+        RE501_AGENTNAME,
+        RE30_ENTRY_HOUR;    
+        COMMIT;
+        */
+        INSERT INTO ETL_LOG@DWH05TODWH01 (LAYER, DATE_KEY, SOURCE, STATUS, FILE_COUNT, PER_COUNT, POST_COUNT, INSERT_TIME)
+        VALUES              ('L3_RECHARGE',VDATE_KEY,'vou','96','','','',SYSDATE);
+        COMMIT;
+EXCEPTION
+ WHEN OTHERS THEN NULL;
+END;
+/
+

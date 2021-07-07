@@ -1,0 +1,8 @@
+--
+-- CLOSE_SIM_NEW  (Directory) 
+--
+CREATE OR REPLACE DIRECTORY 
+CLOSE_SIM_NEW AS 
+'/tmp';
+
+

@@ -1,0 +1,75 @@
+--
+-- P_L2_TO_L3_DATA_MANUAL  (Procedure) 
+--
+CREATE OR REPLACE PROCEDURE DWH_USER.P_L2_TO_L3_DATA_MANUAL (P_PROCESS_DATE VARCHAR2) IS
+    VCOUNT NUMBER;
+    VDATE_KEY NUMBER;
+    VL2STATUS NUMBER;
+    VL3STATUS NUMBER;
+    VDATE DATE := TO_DATE(TO_DATE(P_PROCESS_DATE,'YYYYMMDD'),'DD/MM/RRRR');
+BEGIN
+    SELECT DATE_KEY INTO VDATE_KEY 
+    FROM DATE_DIM@DWH05TODWH01
+    WHERE DATE_KEY = (SELECT A.DATE_KEY FROM DATE_DIM A WHERE A.DATE_VALUE = VDATE);--(SELECT A.DATE_KEY FROM DATE_DIM A WHERE TO_DATE(A.DATE_VALUE,'DD/MM/YYYY') = TO_DATE(SYSDATE,'DD/MM/YYYY'));
+
+        INSERT INTO L3_DATA
+        SELECT /*+ PARALLEL(A,16) */
+        ETL_DATE_KEY                  ,
+        SUM(G41_DEBIT_AMOUNT)              ,
+        SUM(G51_FREE_UNIT_AMOUNT_OF_FLUX)  ,
+        G372_CALLINGPARTYNUMBER       ,
+        G375_CALLINGPARTYIMSI         ,
+        G379_CALLINGCELLID            ,
+        G383_CHARGINGTIME_KEY         ,
+        SUM(G384_TOTALFLUX)                ,
+        G389_SERVICEID                ,
+        G401_MAINOFFERINGID           ,
+        G403_PAYTYPE                  ,
+        G404_CHARGINGTYPE             ,
+        G412_SERVICETYPE              ,
+        G429_RATTYPE                  ,
+        G430_CHARGEPARTYINDICATOR     ,
+        G432_PRIMARYOFFERCHGAMT       ,
+        G435_TAXINFO                  ,
+        SUM(G446_PAY_FREE_UNIT_FLUX)       ,
+        SUM(G447_PAY_FREE_UNIT_DURATION)   ,
+        SUM(G448_PAY_DEBIT_AMOUNT )        ,
+        SUM(G449_PAY_DEBIT_FROM_PREPAID)   ,
+        SUM(G450_PAY_PREPAID_BALANCE )     ,
+        SUM(G453_PAY_POSTPAID_BALANCE)     ,
+        G455_SUBSCRIBERIDTYPE         ,
+        G467_ACCUMLATEDPOINT,
+        G383_CHARGINGTIME_HOUR,
+        G388_IMEI,
+        G418_LASTEFFECTOFFERING   
+        FROM L2_DATA@DWH05TODWH01 A
+        WHERE ETL_DATE_KEY= VDATE_KEY
+        GROUP BY 
+        ETL_DATE_KEY                  ,
+        G372_CALLINGPARTYNUMBER       ,
+        G375_CALLINGPARTYIMSI         ,
+        G379_CALLINGCELLID            ,
+        G383_CHARGINGTIME_KEY         ,
+        G389_SERVICEID                ,
+        G401_MAINOFFERINGID           ,
+        G403_PAYTYPE                  ,
+        G404_CHARGINGTYPE             ,
+        G412_SERVICETYPE              ,
+        G429_RATTYPE                  ,
+        G430_CHARGEPARTYINDICATOR     ,
+        G432_PRIMARYOFFERCHGAMT       ,
+        G435_TAXINFO                  ,
+        G455_SUBSCRIBERIDTYPE         ,
+        G467_ACCUMLATEDPOINT,
+        G383_CHARGINGTIME_HOUR,
+        G388_IMEI,
+        G418_LASTEFFECTOFFERING;                          
+        COMMIT;
+        INSERT INTO ETL_LOG@DWH05TODWH01 (LAYER, DATE_KEY, SOURCE, STATUS, FILE_COUNT, PER_COUNT, POST_COUNT, INSERT_TIME)
+        VALUES              ('L3_DATA',VDATE_KEY,'data','96','','','',SYSDATE);
+        COMMIT;
+EXCEPTION
+ WHEN OTHERS THEN NULL;
+END;
+/
+

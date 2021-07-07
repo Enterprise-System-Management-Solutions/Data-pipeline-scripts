@@ -1,0 +1,89 @@
+--
+-- P_L2_TO_L3_VOICE_MANUAL3  (Procedure) 
+--
+CREATE OR REPLACE PROCEDURE DWH_USER.P_L2_TO_L3_VOICE_MANUAL3 (P_PROCESS_DATE VARCHAR2) IS
+    VCOUNT NUMBER;
+    VDATE_KEY NUMBER;
+    VL2STATUS NUMBER;
+    VL3STATUS NUMBER;
+    VDATE DATE := TO_DATE(TO_DATE(P_PROCESS_DATE,'YYYYMMDD'),'DD/MM/RRRR');
+BEGIN
+        SELECT DATE_KEY INTO VDATE_KEY 
+        FROM DATE_DIM@DWH05TODWH01
+        WHERE DATE_KEY = (SELECT A.DATE_KEY FROM DATE_DIM A WHERE A.DATE_VALUE = VDATE);
+        
+        INSERT INTO L3_VOICE
+        SELECT /*+ PARALLEL(A,8) */
+        ETL_DATE_KEY                  ,
+        V24_SERVICE_CATEGORY        ,
+        V25_USAGE_SERVICE_TYPE      ,
+        V35_RATE_USAGE              ,
+        V36_SERVICE_UNIT_TYPE       ,
+        SUM(V41_DEBIT_AMOUNT) ,
+        SUM(V44_DEBIT_FROM_ADVANCE_PRE),
+        SUM(V49_PAY_FREE_UNIT_TIMES)   ,
+        SUM(V50_PAY_FREE_UNIT_DURATION) ,
+        V55_CUR_BALANCE,
+        V372_CALLINGPARTYNUMBER     ,
+        V373_CALLEDPARTYNUMBER      ,
+        V378_SERVICEFLOW            ,
+        V380_CALLINGROAMINFO        ,
+        V381_CALLINGCELLID          ,
+        V383_CALLEDCELLID           ,
+        V386_BEARERCAPABILITY       ,
+        V387_CHARGINGTIME_KEY       ,
+        V387_CHARGINGTIME_HOUR      ,
+        V389_TERMINATIONREASON      ,
+        V391_IMEI                   ,
+        V394_REDIRECTINGPARTYID     ,
+        V395_MSCADDRESS             ,
+        V397_MAINOFFERINGID         ,
+        V400_PAYTYPE                ,
+        V403_ROAMSTATE              ,
+        V405_CALLINGHOMEAREANUMBER  ,
+        V417_HOTLINEINDICATOR       ,
+        V425_CALLINGNETWORKTYPE     ,
+        V434_ONLINECHARGINGFLAG     ,
+        SUM(V457_PREPAID_BALANCE),
+        V476_ONNETINDICATOR   ,
+         V402_CALLTYPE 
+        FROM L2_VOICE@DWH05TODWH01 A
+        WHERE ETL_DATE_KEY= VDATE_KEY
+        GROUP BY   
+        ETL_DATE_KEY                  ,
+        V24_SERVICE_CATEGORY        ,
+        V25_USAGE_SERVICE_TYPE      ,
+        V35_RATE_USAGE              ,
+        V36_SERVICE_UNIT_TYPE       ,
+        V55_CUR_BALANCE             ,
+        V372_CALLINGPARTYNUMBER     ,
+        V373_CALLEDPARTYNUMBER      ,
+        V378_SERVICEFLOW            ,
+        V380_CALLINGROAMINFO        ,
+        V381_CALLINGCELLID          ,
+        V383_CALLEDCELLID           ,
+        V386_BEARERCAPABILITY       ,
+        V387_CHARGINGTIME_KEY       ,
+        V387_CHARGINGTIME_HOUR      ,
+        V389_TERMINATIONREASON      ,
+        V391_IMEI                   ,
+        V394_REDIRECTINGPARTYID     ,
+        V395_MSCADDRESS             ,
+        V397_MAINOFFERINGID         ,
+        V400_PAYTYPE                ,
+        V403_ROAMSTATE              ,
+        V405_CALLINGHOMEAREANUMBER  ,
+        V417_HOTLINEINDICATOR       ,
+        V425_CALLINGNETWORKTYPE     ,
+        V434_ONLINECHARGINGFLAG     ,
+        V476_ONNETINDICATOR,
+         V402_CALLTYPE;
+        COMMIT;
+        INSERT INTO ETL_LOG@DWH05TODWH01 (LAYER, DATE_KEY, SOURCE, STATUS, FILE_COUNT, PER_COUNT, POST_COUNT, INSERT_TIME)
+        VALUES              ('L3_VOICE',VDATE_KEY,'voice','96','','','',SYSDATE);
+        COMMIT;
+EXCEPTION
+ WHEN OTHERS THEN NULL;
+END;
+/
+
